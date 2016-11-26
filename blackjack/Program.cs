@@ -168,7 +168,9 @@ namespace blackjack
                     Console.WriteLine($"Dealer: {dealerCardValue} Player: {playerCardValue}");
                     Console.WriteLine("Dealer wins!!!");
                 }
+                Console.WriteLine($"Dealer: { dealerCardValue}");
                 Console.ReadLine();
+
                 
             }
         }
