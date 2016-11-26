@@ -149,11 +149,15 @@ namespace blackjack
                 else if (dealerCardValue == 21)
                 {
                     Console.WriteLine($"Dealer has: {dealerCardValue}");
-                    Console.WriteLine("Dealer wins");
+                    Console.WriteLine("Dealer wins!!!");
                 }
                 else if (dealerCardValue == 16 && playerCardValue < 16)
                 {
                     Console.WriteLine("Dealer Wins!!!");
+                }
+                else if (playerCardValue > dealerCardValue)
+                {
+                    Console.WriteLine("Player Wins!!!");
                 }
                 else
                 {
@@ -162,7 +166,7 @@ namespace blackjack
                     dealerCardValue += dealtCardD.GetCardValue();
 
                     Console.WriteLine($"Dealer: {dealerCardValue} Player: {playerCardValue}");
-                    Console.WriteLine("Dealer has won, player busted");
+                    Console.WriteLine("Dealer wins!!!");
                 }
                 Console.ReadLine();
                 
