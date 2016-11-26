@@ -17,10 +17,10 @@ namespace blackjack
 
             foreach (Rank r in Enum.GetValues(typeof(Rank)))
             {
-            foreach (Suit s in Enum.GetValues(typeof(Suit)))
-            {
-                deck.Add(new Card(s, r));
-            }
+                foreach (Suit s in Enum.GetValues(typeof(Suit)))
+                {
+                    deck.Add(new Card(s, r));
+                }
             }
 
             randomDeck = deck.OrderBy(x => Guid.NewGuid()).ToList();
@@ -30,11 +30,9 @@ namespace blackjack
             Console.WriteLine("Push Enter to begin playing");
             Console.ReadLine();
 
-            var cardCount = 0;
             var playerCardValue = 0;
             var dealerCardValue = 0;
-            var dealerTotal = dealerCardValue;
-            
+            var cardCount = 0;
 
             Card dealtCardP;
             Card dealtCardD;
@@ -42,7 +40,7 @@ namespace blackjack
             dealtCardP = randomDeck[cardCount];
             cardCount++;
             playerCardValue = dealtCardP.GetCardValue();
-            
+
             Console.WriteLine($"Your first card is.. {dealtCardP}");
 
             dealtCardP = randomDeck[cardCount];
@@ -56,135 +54,122 @@ namespace blackjack
             dealerCardValue = dealtCardD.GetCardValue();
 
             Console.WriteLine($"The dealer is showing {dealtCardD}");
-            Console.WriteLine($"Dealer: {dealerCardValue} Player: {playerCardValue}" );
+            Console.WriteLine($"Dealer: {dealerCardValue} Player: {playerCardValue}");
             Console.WriteLine();
-            Console.WriteLine("Would you like to hit? Enter (1) for Hit or (n) to Stay");
-            var input = Console.ReadLine();
-            
+
+            //players turn 
 
             while (true)
             {
-                dealtCardP = randomDeck[cardCount];
-                cardCount++;
-                playerCardValue += dealtCardP.GetCardValue();
-                Console.WriteLine($"Your card is {dealtCardP}");
-                Console.WriteLine($"You now have {playerCardValue}");
-                Console.ReadLine();
 
                 if (playerCardValue == 21)
                 {
                     Console.WriteLine($"Blackjack! YOU WIN!!!");
-                    Console.WriteLine();
-                    Console.WriteLine($"Dealer has {dealerCardValue}");
+                    break;
                 }
-                else if (playerCardValue > 21)
+                else if (playerCardValue > 21) //player dealt two aces 
                 {
-                    Console.WriteLine($"Oops!{playerCardValue}. You busted, you lose");
-                }
-                else if (playerCardValue < 21)
-                {
+                    Console.WriteLine("You Lose, you busted!!");
                     Console.WriteLine();
-                    Console.WriteLine("Would you like to hit? y/n?");
-                    var answer = Console.ReadLine();
+                    break;     
+                }
 
+                Console.WriteLine("Hit (h) or Stay (s)?");
+                string input = Console.ReadLine();
 
-                    if (answer == "y")
+                if (input == "h")
+                {
+                    dealtCardP = randomDeck[cardCount];
+                    cardCount++;
+                    playerCardValue += dealtCardP.GetCardValue();
+
+                    Console.WriteLine($"Your card is {dealtCardP}");
+                    Console.WriteLine($"You now have {playerCardValue}");
+                    Console.WriteLine();
+
+                    if (playerCardValue > 21)
                     {
-                        dealtCardP = randomDeck[cardCount];
-                        cardCount++;
-                        playerCardValue += dealtCardP.GetCardValue();
-                         
-                        Console.WriteLine($"Your card is {dealtCardP}");
-                        Console.WriteLine($"You now have {playerCardValue}");
-
-                        if (playerCardValue < 21)
-                        {
-                            Console.WriteLine("You busted, Dealer Wins");
-                            Console.WriteLine();
-                            Console.ReadLine();
-                            break;
-                        }
-                        else
-                            continue;
+                        Console.WriteLine("You Lose, you busted!!");
+                        Console.ReadLine();
                     }
-                    else if (answer == "n")
+                    else if (playerCardValue == 21)
                     {
-                        Console.WriteLine("Dealers Turn!");
-                        break;
+                        Console.WriteLine($"Blackjack! YOU WIN!!!");
                     }
                     else
                     {
-                        Console.WriteLine("You must enter a 'y' or a 'n'");
+                        continue;
                     }
                 }
-                else 
+                else if (input == "s")
                 {
-                    Console.WriteLine("Dealers turn");
+                    Console.WriteLine("Dealers Turn!");
                     break;
                 }
-                break;
+                else
+                {
+                    Console.WriteLine("Incorrect response, try again");
+                    continue;
+                }
             }
-            
-          
 
-            while (true)
+
+            //Dealers Turn
+
+
+            if (playerCardValue < 21)
             {
+                Console.WriteLine("Players card value is " + playerCardValue);
                 dealtCardD = randomDeck[cardCount];
                 cardCount++;
                 dealerCardValue += dealtCardD.GetCardValue();
-                Console.WriteLine($"Dealer card is {dealtCardD}");
-                Console.WriteLine($"Dealer now has {playerCardValue}");
-                Console.WriteLine();
 
-                if (dealerTotal == 21 && playerCardValue < 21)
-                {
-                    Console.WriteLine("Dealer Wins!!!");
-                    break;
-                }
-                else if (dealerTotal == 16 && playerCardValue < 16)
-                {
-                    Console.WriteLine("Dealer Wins!!!");
-                    break;
-                }
-                    else if (dealerTotal == playerCardValue && dealerTotal < 21 && playerCardValue < 21)
-                    {
-                    Console.WriteLine("Draw. Play again?");
-                    Console.WriteLine();
-                    }
-
-                if (playerCardValue < 21 && dealerTotal < 16)
+                //player has not busted
+                while (dealerCardValue < 21 && dealerCardValue < playerCardValue)
                 {
                     dealtCardD = randomDeck[cardCount];
                     cardCount++;
-                    dealerCardValue = dealtCardD.GetCardValue();
-
-                    Console.WriteLine();
-                    Console.WriteLine($"Dealers card {dealtCardD}");
-                    Console.WriteLine($"Dealer has {dealerTotal}");
+                    dealerCardValue += dealtCardD.GetCardValue();
                 }
 
-                else if (dealerTotal < playerCardValue)
+                //check for winner
+                if (playerCardValue == dealerCardValue)
                 {
-                    Console.WriteLine("Player win!!!");
-                    break;
+                    Console.WriteLine("Player and Dealer have tied");
                 }
-                else if (dealerTotal > playerCardValue)
+                else if (playerCardValue < dealerCardValue && dealerCardValue <= 21)
                 {
-                    Console.WriteLine("Dealer Wins!");
-                }   
+                    Console.WriteLine($"Dealer has: {dealerCardValue}");
+                    Console.WriteLine("Dealer wins");
+                }
+                else if (dealerCardValue > 21)
+                {
+                    Console.WriteLine("Dealer has busted, player wins!");
+                }
+                else if (dealerCardValue == 21)
+                {
+                    Console.WriteLine($"Dealer has: {dealerCardValue}");
+                    Console.WriteLine("Dealer wins");
+                }
+                else if (dealerCardValue == 16 && playerCardValue < 16)
+                {
+                    Console.WriteLine("Dealer Wins!!!");
+                }
                 else
                 {
-                    break;
+                    dealtCardD = randomDeck[cardCount];
+                    cardCount++;
+                    dealerCardValue += dealtCardD.GetCardValue();
+
+                    Console.WriteLine($"Dealer: {dealerCardValue} Player: {playerCardValue}");
+                    Console.WriteLine("Dealer has won, player busted");
                 }
+                Console.ReadLine();
+                
             }
-            Console.ReadLine();
         }
-
     }
-    }
-
-
-
+}
 
 
 

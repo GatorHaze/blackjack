@@ -54,7 +54,7 @@ namespace blackjack
                     break;
                 case Rank.Three:
                     rv = 3; 
-                    break;
+                    break; 
                 case Rank.Four:
                     rv = 4;
                     break;
