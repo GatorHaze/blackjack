@@ -96,6 +96,5 @@ namespace blackjack
             return $"The {this.Rank} of {this.Suit}";
         }
     }
-
 }
 
