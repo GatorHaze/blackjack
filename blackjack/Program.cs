@@ -95,6 +95,7 @@ namespace blackjack
                     else if (playerCardValue == 21)
                     {
                         Console.WriteLine($"Blackjack! YOU WIN!!!");
+                        Console.ReadLine();
                     }
                     else
                     {
@@ -125,7 +126,7 @@ namespace blackjack
                 dealerCardValue += dealtCardD.GetCardValue();
 
                 //player has not busted
-                while (dealerCardValue < 21 && dealerCardValue < playerCardValue)
+                while (dealerCardValue < 16)
                 {
                     dealtCardD = randomDeck[cardCount];
                     cardCount++;
